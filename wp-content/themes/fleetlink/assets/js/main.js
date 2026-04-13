@@ -78,6 +78,45 @@ menuToggle.focus();
 }
 
 /* =========================================================
+   MOBILE SUB-MENU / MEGA-MENU ACCORDION
+   ========================================================= */
+if ( primaryNav ) {
+var parentItems = primaryNav.querySelectorAll( '.menu-item-has-children' );
+parentItems.forEach( function ( item ) {
+var link = item.querySelector( ':scope > a' );
+if ( ! link ) return;
+
+link.addEventListener( 'click', function ( e ) {
+// Only intercept in mobile (nav.open) or when touching the chevron area
+if ( ! primaryNav.classList.contains( 'open' ) ) return;
+
+// If clicking a real URL and this is a desktop-style link, let it go through
+var subMenu = item.querySelector( ':scope > .sub-menu, :scope > .mega-dropdown' );
+if ( ! subMenu ) return;
+
+e.preventDefault();
+var wasOpen = item.classList.contains( 'open' );
+
+// Collapse all siblings at same depth
+var siblings = item.parentElement ? item.parentElement.querySelectorAll( ':scope > .menu-item-has-children' ) : [];
+siblings.forEach( function ( sib ) {
+sib.classList.remove( 'open' );
+var sibLink = sib.querySelector( ':scope > a' );
+if ( sibLink ) sibLink.setAttribute( 'aria-expanded', 'false' );
+} );
+
+if ( ! wasOpen ) {
+item.classList.add( 'open' );
+link.setAttribute( 'aria-expanded', 'true' );
+} else {
+item.classList.remove( 'open' );
+link.setAttribute( 'aria-expanded', 'false' );
+}
+} );
+} );
+}
+
+/* =========================================================
    PRICING TOGGLE (monthly / annual)
    ========================================================= */
 var billingToggle = document.getElementById( 'billingToggle' );
