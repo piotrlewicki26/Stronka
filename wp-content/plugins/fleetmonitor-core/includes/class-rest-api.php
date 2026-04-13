@@ -2,12 +2,12 @@
 /**
  * REST API endpoints for fleet data.
  *
- * @package FleetMonitor_Core
+ * @package FleetLink_Core
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class FleetMonitor_REST_API {
+class FleetLink_REST_API {
 
 	const NAMESPACE = 'fleetmonitor/v1';
 
@@ -115,7 +115,7 @@ class FleetMonitor_REST_API {
 			return current_user_can( 'read' );
 		}
 
-		$api_key = $request->get_header( 'X-FleetMonitor-Key' );
+		$api_key = $request->get_header( 'X-FleetLink-Key' );
 		if ( $api_key ) {
 			return self::validate_api_key( sanitize_text_field( $api_key ) );
 		}

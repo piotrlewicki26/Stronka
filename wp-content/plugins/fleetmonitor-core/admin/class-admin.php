@@ -1,13 +1,13 @@
 <?php
 /**
- * Admin panel for FleetMonitor Core.
+ * Admin panel for FleetLink Core.
  *
- * @package FleetMonitor_Core
+ * @package FleetLink_Core
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class FleetMonitor_Admin {
+class FleetLink_Admin {
 
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'add_admin_menu' ) );
@@ -23,26 +23,26 @@ class FleetMonitor_Admin {
 
 	public static function add_admin_menu() {
 		add_menu_page(
-			__( 'FleetMonitor', 'fleetmonitor-core' ),
-			__( 'FleetMonitor', 'fleetmonitor-core' ),
+			__( 'FleetLink', 'fleetmonitor-core' ),
+			__( 'FleetLink', 'fleetmonitor-core' ),
 			'manage_options',
-			'fleetmonitor',
+			'fleetlink',
 			array( __CLASS__, 'render_dashboard_page' ),
 			'dashicons-location-alt',
 			3
 		);
 
 		add_submenu_page(
-			'fleetmonitor',
+			'fleetlink',
 			__( 'Dashboard', 'fleetmonitor-core' ),
 			__( 'Dashboard', 'fleetmonitor-core' ),
 			'manage_options',
-			'fleetmonitor',
+			'fleetlink',
 			array( __CLASS__, 'render_dashboard_page' )
 		);
 
 		add_submenu_page(
-			'fleetmonitor',
+			'fleetlink',
 			__( 'Settings', 'fleetmonitor-core' ),
 			__( 'Settings', 'fleetmonitor-core' ),
 			'manage_options',
@@ -51,7 +51,7 @@ class FleetMonitor_Admin {
 		);
 
 		add_submenu_page(
-			'fleetmonitor',
+			'fleetlink',
 			__( 'API Keys', 'fleetmonitor-core' ),
 			__( 'API Keys', 'fleetmonitor-core' ),
 			'manage_options',
@@ -60,7 +60,7 @@ class FleetMonitor_Admin {
 		);
 
 		add_submenu_page(
-			'fleetmonitor',
+			'fleetlink',
 			__( 'Demo Content', 'fleetmonitor-core' ),
 			__( 'Demo Content', 'fleetmonitor-core' ),
 			'manage_options',
@@ -74,7 +74,7 @@ class FleetMonitor_Admin {
 	// ----------------------------------------------------------
 
 	public static function enqueue_admin_assets( $hook ) {
-		if ( strpos( $hook, 'fleetmonitor' ) === false ) {
+		if ( strpos( $hook, 'fleetlink' ) === false ) {
 			return;
 		}
 
@@ -101,8 +101,8 @@ class FleetMonitor_Admin {
 				<?php
 				printf(
 					/* translators: %s: settings page link */
-					esc_html__( 'FleetMonitor Core activated successfully! 🚀 Go to %s to configure the plugin.', 'fleetmonitor-core' ),
-					'<a href="' . esc_url( admin_url( 'admin.php?page=fleetmonitor' ) ) . '">' . esc_html__( 'FleetMonitor Dashboard', 'fleetmonitor-core' ) . '</a>'
+					esc_html__( 'FleetLink Core activated successfully! 🚀 Go to %s to configure the plugin.', 'fleetmonitor-core' ),
+					'<a href="' . esc_url( admin_url( 'admin.php?page=fleetmonitor' ) ) . '">' . esc_html__( 'FleetLink Dashboard', 'fleetmonitor-core' ) . '</a>'
 				);
 				?>
 			</p>
@@ -134,8 +134,8 @@ class FleetMonitor_Admin {
 		$product_count    = class_exists( 'WooCommerce' ) ? ( wp_count_posts( 'product' )->publish ?? 0 ) : 0;
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'FleetMonitor Dashboard', 'fleetmonitor-core' ); ?></h1>
-			<p><?php esc_html_e( 'Welcome to FleetMonitor Core — your vehicle monitoring and fleet management WordPress plugin.', 'fleetmonitor-core' ); ?></p>
+			<h1><?php esc_html_e( 'FleetLink Dashboard', 'fleetmonitor-core' ); ?></h1>
+			<p><?php esc_html_e( 'Welcome to FleetLink Core — your vehicle monitoring and fleet management WordPress plugin.', 'fleetmonitor-core' ); ?></p>
 
 			<!-- Stats Cards -->
 			<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:24px 0;">
@@ -226,7 +226,7 @@ class FleetMonitor_Admin {
 		$interval = get_option( 'fm_live_update_interval', 30 );
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'FleetMonitor Settings', 'fleetmonitor-core' ); ?></h1>
+			<h1><?php esc_html_e( 'FleetLink Settings', 'fleetmonitor-core' ); ?></h1>
 			<form method="post">
 				<?php wp_nonce_field( 'fm_settings_save' ); ?>
 				<table class="form-table">
@@ -284,7 +284,7 @@ class FleetMonitor_Admin {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'API Keys', 'fleetmonitor-core' ); ?></h1>
-			<p><?php esc_html_e( 'API keys allow external applications (GPS devices, mobile apps) to authenticate with the FleetMonitor REST API.', 'fleetmonitor-core' ); ?></p>
+			<p><?php esc_html_e( 'API keys allow external applications (GPS devices, mobile apps) to authenticate with the FleetLink REST API.', 'fleetmonitor-core' ); ?></p>
 
 			<form method="post" style="background:#fff; border:1px solid #ccd0d4; border-radius:4px; padding:16px; margin-bottom:24px; max-width:500px;">
 				<?php wp_nonce_field( 'fm_api_key_generate' ); ?>
@@ -333,7 +333,7 @@ class FleetMonitor_Admin {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Demo Content', 'fleetmonitor-core' ); ?></h1>
-			<p><?php esc_html_e( 'Install sample data to see how FleetMonitor looks with real content.', 'fleetmonitor-core' ); ?></p>
+			<p><?php esc_html_e( 'Install sample data to see how FleetLink looks with real content.', 'fleetmonitor-core' ); ?></p>
 
 			<div style="background:#fff; border:1px solid #ccd0d4; border-radius:4px; padding:24px; max-width:600px;">
 				<h2 style="margin-top:0;"><?php esc_html_e( 'What will be installed:', 'fleetmonitor-core' ); ?></h2>
@@ -367,7 +367,7 @@ class FleetMonitor_Admin {
 		}
 
 		require_once FM_CORE_DIR . 'includes/class-demo-content.php';
-		FleetMonitor_Demo_Content::install();
+		FleetLink_Demo_Content::install();
 
 		add_action(
 			'admin_notices',

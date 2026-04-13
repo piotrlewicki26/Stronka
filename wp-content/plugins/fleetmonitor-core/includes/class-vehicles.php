@@ -2,12 +2,12 @@
 /**
  * Vehicle post type and taxonomy registration.
  *
- * @package FleetMonitor_Core
+ * @package FleetLink_Core
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class FleetMonitor_Vehicles {
+class FleetLink_Vehicles {
 
 	/**
 	 * Initialise hooks.

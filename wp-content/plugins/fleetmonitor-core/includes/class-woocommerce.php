@@ -3,12 +3,12 @@
  * WooCommerce integration class.
  * Handles product categories, custom product data and sample products.
  *
- * @package FleetMonitor_Core
+ * @package FleetLink_Core
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class FleetMonitor_WooCommerce {
+class FleetLink_WooCommerce {
 
 	public static function init() {
 		if ( ! class_exists( 'WooCommerce' ) ) {
@@ -35,7 +35,7 @@ class FleetMonitor_WooCommerce {
 				<?php
 				printf(
 					/* translators: %s: WooCommerce */
-					esc_html__( 'FleetMonitor Core: %s is required for full shop functionality.', 'fleetmonitor-core' ),
+					esc_html__( 'FleetLink Core: %s is required for full shop functionality.', 'fleetmonitor-core' ),
 					'<strong>WooCommerce</strong>'
 				);
 				?>
@@ -286,7 +286,7 @@ class FleetMonitor_WooCommerce {
 				'name'          => 'FleetTrack Pro X200',
 				'price'         => '299.99',
 				'sale_price'    => '',
-				'description'   => '<p>The FleetTrack Pro X200 is our flagship 4G LTE GPS tracker designed for professional fleet management. With a built-in 3,000 mAh battery providing up to 7 days of standby, IP67 waterproof housing, and real-time updates every 5 seconds, it is the ultimate tool for tracking commercial vehicles.</p><ul><li>4G LTE connectivity with 2G fallback</li><li>Real-time position every 5 seconds</li><li>IP67 waterproof and dustproof</li><li>Built-in accelerometer for motion detection</li><li>Geofencing and speed alerts</li><li>Compatible with FleetMonitor Pro platform</li></ul>',
+				'description'   => '<p>The FleetTrack Pro X200 is our flagship 4G LTE GPS tracker designed for professional fleet management. With a built-in 3,000 mAh battery providing up to 7 days of standby, IP67 waterproof housing, and real-time updates every 5 seconds, it is the ultimate tool for tracking commercial vehicles.</p><ul><li>4G LTE connectivity with 2G fallback</li><li>Real-time position every 5 seconds</li><li>IP67 waterproof and dustproof</li><li>Built-in accelerometer for motion detection</li><li>Geofencing and speed alerts</li><li>Compatible with FleetLink platform</li></ul>',
 				'short_desc'    => '4G LTE professional GPS vehicle tracker with 7-day battery, IP67 waterproofing and real-time tracking.',
 				'cats'          => array( 'gps-trackers' ),
 				'sku'           => 'FM-X200',
@@ -341,10 +341,10 @@ class FleetMonitor_WooCommerce {
 				),
 			),
 			array(
-				'name'          => 'FleetMonitor SaaS Pro – Monthly',
+				'name'          => 'FleetLink SaaS Pro – Monthly',
 				'price'         => '79.99',
 				'sale_price'    => '',
-				'description'   => '<p>The FleetMonitor SaaS Pro subscription gives you full access to the professional fleet management platform for up to 25 vehicles. Includes real-time tracking, route optimisation, driver behaviour monitoring, maintenance management and unlimited reports.</p><p><strong>Subscription includes:</strong></p><ul><li>Up to 25 vehicles</li><li>Real-time GPS tracking</li><li>Driver behaviour analytics</li><li>Route optimisation</li><li>Maintenance scheduling</li><li>Unlimited reports & exports</li><li>Mobile apps (iOS + Android)</li><li>Priority email support</li></ul>',
+				'description'   => '<p>The FleetLink SaaS Pro subscription gives you full access to the professional fleet management platform for up to 25 vehicles. Includes real-time tracking, route optimisation, driver behaviour monitoring, maintenance management and unlimited reports.</p><p><strong>Subscription includes:</strong></p><ul><li>Up to 25 vehicles</li><li>Real-time GPS tracking</li><li>Driver behaviour analytics</li><li>Route optimisation</li><li>Maintenance scheduling</li><li>Unlimited reports & exports</li><li>Mobile apps (iOS + Android)</li><li>Priority email support</li></ul>',
 				'short_desc'    => 'Professional fleet management SaaS subscription for up to 25 vehicles. Full feature set, cancel anytime.',
 				'cats'          => array( 'fleet-software' ),
 				'sku'           => 'FM-SAAS-PRO-MO',

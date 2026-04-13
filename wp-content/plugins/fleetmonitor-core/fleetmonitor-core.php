@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name:       FleetMonitor Core
- * Plugin URI:        https://fleetmonitor.pro
- * Description:       Core functionality for the FleetMonitor Pro WordPress theme. Adds vehicle tracking post types, fleet management features, WooCommerce product data, REST API endpoints and demo content installer.
+ * Plugin Name: FleetLink Core
+ * Plugin URI: https://fleetlink.pl/core-plugin
+ * Description: Core functionality for FleetLink GPS fleet management platform. Adds custom post types for vehicles, testimonials, WooCommerce GPS product integration, REST API endpoints and demo content installer.
  * Version:           1.0.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
- * Author:            FleetMonitor Team
- * Author URI:        https://fleetmonitor.pro
+ * Author:            FleetLink Team
+ * Author URI:        https://fleetlink.pl
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       fleetmonitor-core
@@ -27,7 +27,7 @@ define( 'FM_CORE_BASENAME', plugin_basename( __FILE__ ) );
 
 spl_autoload_register(
 	function ( $class ) {
-		$prefix = 'FleetMonitor\\';
+		$prefix = 'FleetLink\\';
 		$base   = FM_CORE_DIR . 'includes/';
 
 		if ( 0 !== strpos( $class, $prefix ) ) {
@@ -59,12 +59,12 @@ require_once FM_CORE_DIR . 'admin/class-admin.php';
 
 register_activation_hook(
 	__FILE__,
-	array( 'FleetMonitor_Vehicles', 'on_activate' )
+	array( 'FleetLink_Vehicles', 'on_activate' )
 );
 
 register_deactivation_hook(
 	__FILE__,
-	array( 'FleetMonitor_Vehicles', 'on_deactivate' )
+	array( 'FleetLink_Vehicles', 'on_deactivate' )
 );
 
 // =========================================================
@@ -77,12 +77,12 @@ add_action(
 		load_plugin_textdomain( 'fleetmonitor-core', false, dirname( FM_CORE_BASENAME ) . '/languages' );
 
 		// Boot classes
-		FleetMonitor_Vehicles::init();
-		FleetMonitor_WooCommerce::init();
-		FleetMonitor_REST_API::init();
+		FleetLink_Vehicles::init();
+		FleetLink_WooCommerce::init();
+		FleetLink_REST_API::init();
 
 		if ( is_admin() ) {
-			FleetMonitor_Admin::init();
+			FleetLink_Admin::init();
 		}
 	}
 );

@@ -2,20 +2,20 @@
 /**
  * Demo content installer.
  *
- * @package FleetMonitor_Core
+ * @package FleetLink_Core
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class FleetMonitor_Demo_Content {
+class FleetLink_Demo_Content {
 
 	public static function install() {
 		// Reset the "products created" flag so WooCommerce class will re-run
 		delete_option( 'fm_sample_products_created' );
 
 		// Create sample products via the WooCommerce class
-		if ( class_exists( 'FleetMonitor_WooCommerce' ) && class_exists( 'WooCommerce' ) ) {
-			FleetMonitor_WooCommerce::maybe_create_sample_products();
+		if ( class_exists( 'FleetLink_WooCommerce' ) && class_exists( 'WooCommerce' ) ) {
+			FleetLink_WooCommerce::maybe_create_sample_products();
 		}
 
 		self::create_sample_vehicles();
@@ -168,14 +168,14 @@ class FleetMonitor_Demo_Content {
 		$testimonials = array(
 			array(
 				'title'   => 'Adam Kowalski',
-				'content' => 'FleetMonitor cut our fuel costs by 31% in the first quarter. The real-time alerts and driver behaviour reports are simply indispensable. Our drivers drive safer and our customers are happier.',
+				'content' => 'FleetLink cut our fuel costs by 31% in the first quarter. The real-time alerts and driver behaviour reports are simply indispensable. Our drivers drive safer and our customers are happier.',
 				'role'    => 'Fleet Director, Kowalski Transport Sp. z o.o.',
 				'rating'  => '5',
 				'company' => 'Kowalski Transport',
 			),
 			array(
 				'title'   => 'Maria Nowak',
-				'content' => 'We manage 120 vehicles across 3 countries and FleetMonitor gives us a single pane of glass. Setup was incredibly easy and the support team is exceptional.',
+				'content' => 'We manage 120 vehicles across 3 countries and FleetLink gives us a single pane of glass. Setup was incredibly easy and the support team is exceptional.',
 				'role'    => 'Operations Manager, EuroLogistics GmbH',
 				'rating'  => '5',
 				'company' => 'EuroLogistics',
@@ -258,7 +258,7 @@ class FleetMonitor_Demo_Content {
 				'cats'    => array( 'Buying Guide', 'GPS Trackers' ),
 			),
 			array(
-				'title'   => 'Driver Safety: How Fleet Monitoring Saves Lives',
+				'title'   => 'Driver Safety: How FleetLinking Saves Lives',
 				'excerpt' => 'Road accidents cost fleets billions each year. Learn how driver behaviour monitoring reduces accidents, insurance costs and liability.',
 				'content' => '<p>Road traffic accidents are the leading cause of work-related fatalities in Europe, according to the European Agency for Safety and Health at Work. For fleet operators, the consequences extend far beyond the tragic human cost – accidents mean downtime, insurance claims, legal liability and reputational damage.</p>
 <h2>The Data-Driven Approach to Safety</h2>
