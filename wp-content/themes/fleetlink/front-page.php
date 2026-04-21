@@ -105,6 +105,104 @@ echo esc_html( implode( ' ', $words ) ) . ' <span class="highlight">' . esc_html
 </div>
 </section>
 
+<?php
+/* =========================================================
+ * PHOTO SLIDER  – Customizer-driven, 5 slides
+ * ========================================================= */
+$slider_slides = array();
+for ( $si = 1; $si <= 5; $si++ ) {
+	$active = get_theme_mod( "slider_{$si}_active", ( $si <= 3 ) );
+	if ( ! $active ) {
+		continue;
+	}
+	$slider_slides[] = array(
+		'image'       => get_theme_mod( "slider_{$si}_image", '' ),
+		'eyebrow'     => get_theme_mod( "slider_{$si}_eyebrow", fleetlink_slider_default( $si, 'eyebrow' ) ),
+		'title'       => get_theme_mod( "slider_{$si}_title",   fleetlink_slider_default( $si, 'title' )   ),
+		'description' => get_theme_mod( "slider_{$si}_description", fleetlink_slider_default( $si, 'description' ) ),
+		'btn_text'    => get_theme_mod( "slider_{$si}_btn_text", fleetlink_slider_default( $si, 'btn_text' ) ),
+		'btn_url'     => get_theme_mod( "slider_{$si}_btn_url",  fleetlink_slider_default( $si, 'btn_url' )  ),
+		'btn2_text'   => get_theme_mod( "slider_{$si}_btn2_text", '' ),
+		'btn2_url'    => get_theme_mod( "slider_{$si}_btn2_url",  '' ),
+	);
+}
+
+if ( ! empty( $slider_slides ) ) :
+	$autoplay  = get_theme_mod( 'slider_autoplay', true )  ? 'true'  : 'false';
+	$interval  = (int) get_theme_mod( 'slider_interval', 6000 );
+?>
+<!-- PHOTO SLIDER -->
+<section class="photo-slider-section" id="photo-slider" aria-label="<?php esc_attr_e( 'Galeria rozwiązań', 'fleetlink' ); ?>">
+<div id="photoSlider"
+     role="region"
+     aria-label="<?php esc_attr_e( 'Slajder zdjęciowy', 'fleetlink' ); ?>"
+     data-autoplay="<?php echo esc_attr( $autoplay ); ?>"
+     data-interval="<?php echo esc_attr( $interval ); ?>">
+
+<?php foreach ( $slider_slides as $idx => $slide ) :
+	$has_img = ! empty( $slide['image'] );
+	$style   = $has_img ? ' style="background-image:url(\'' . esc_url( $slide['image'] ) . '\')"' : '';
+?>
+<div class="ps-slide"<?php echo $style; // phpcs:ignore WordPress.Security.EscapeOutput ?> aria-hidden="<?php echo $idx === 0 ? 'false' : 'true'; ?>">
+	<div class="ps-slide-overlay"></div>
+
+	<!-- Decorative large icon per slide (hidden when photo is set) -->
+	<?php if ( ! $has_img ) : ?>
+	<div class="ps-icon-deco" aria-hidden="true"><?php echo fleetlink_slider_deco_icon( $idx ); // phpcs:ignore ?></div>
+	<?php endif; ?>
+
+	<div class="container">
+		<div class="ps-slide-content">
+			<?php if ( ! empty( $slide['eyebrow'] ) ) : ?>
+			<div class="ps-eyebrow"><?php echo esc_html( $slide['eyebrow'] ); ?></div>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $slide['title'] ) ) : ?>
+			<h2 class="ps-title"><?php echo wp_kses( $slide['title'], array( 'span' => array( 'class' => array() ) ) ); ?></h2>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $slide['description'] ) ) : ?>
+			<p class="ps-description"><?php echo esc_html( $slide['description'] ); ?></p>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $slide['btn_text'] ) || ! empty( $slide['btn2_text'] ) ) : ?>
+			<div class="ps-actions">
+				<?php if ( ! empty( $slide['btn_text'] ) ) : ?>
+				<a href="<?php echo esc_url( $slide['btn_url'] ?: '#' ); ?>" class="btn btn-primary btn-lg">
+					<?php echo esc_html( $slide['btn_text'] ); ?>
+					<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 10h10M11 6l4 4-4 4"/></svg>
+				</a>
+				<?php endif; ?>
+				<?php if ( ! empty( $slide['btn2_text'] ) ) : ?>
+				<a href="<?php echo esc_url( $slide['btn2_url'] ?: '#' ); ?>" class="btn btn-outline-white btn-md">
+					<?php echo esc_html( $slide['btn2_text'] ); ?>
+				</a>
+				<?php endif; ?>
+			</div>
+			<?php endif; ?>
+		</div>
+	</div>
+</div>
+<?php endforeach; ?>
+
+<!-- Prev / Next buttons -->
+<button class="ps-btn-prev" aria-label="<?php esc_attr_e( 'Poprzedni slajd', 'fleetlink' ); ?>">
+	<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg>
+</button>
+<button class="ps-btn-next" aria-label="<?php esc_attr_e( 'Następny slajd', 'fleetlink' ); ?>">
+	<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M9 18l6-6-6-6"/></svg>
+</button>
+
+<!-- Dot indicators -->
+<div class="ps-dots" role="tablist" aria-label="<?php esc_attr_e( 'Nawigacja slajdera', 'fleetlink' ); ?>"></div>
+
+<!-- Slide counter -->
+<div class="ps-counter" aria-hidden="true">01 / <?php echo str_pad( count( $slider_slides ), 2, '0', STR_PAD_LEFT ); ?></div>
+
+</div><!-- #photoSlider -->
+</section><!-- .photo-slider-section -->
+<?php endif; // slider_slides ?>
+
 <!-- CLIENTS -->
 <section class="clients-section" aria-label="<?php esc_attr_e( 'Nasi klienci', 'fleetlink' ); ?>">
 <div class="container">
@@ -122,9 +220,9 @@ foreach ( $clients as $c ) echo '<div class="client-logo">' . esc_html( $c ) . '
 <section class="features-section section" id="features">
 <div class="container">
 <div class="section-header fade-in">
-<span class="section-eyebrow"><?php esc_html_e( 'Możliwości platformy', 'fleetlink' ); ?></span>
-<h2 class="section-title"><?php esc_html_e( 'Wszystko, czego potrzebuje', 'fleetlink' ); ?> <span class="gradient-text"><?php esc_html_e( 'nowoczesna flota', 'fleetlink' ); ?></span></h2>
-<p class="section-description"><?php esc_html_e( 'FleetLink łączy śledzenie GPS, analizę kierowców, zarządzanie serwisem i optymalizację kosztów w jednej intuicyjnej platformie.', 'fleetlink' ); ?></p>
+<span class="section-eyebrow"><?php echo esc_html( get_theme_mod( 'features_eyebrow', __( 'Możliwości platformy', 'fleetlink' ) ) ); ?></span>
+<h2 class="section-title"><?php echo esc_html( get_theme_mod( 'features_title', __( 'Wszystko, czego potrzebuje nowoczesna flota', 'fleetlink' ) ) ); ?></h2>
+<p class="section-description"><?php echo esc_html( get_theme_mod( 'features_description', __( 'FleetLink łączy śledzenie GPS, analizę kierowców, zarządzanie serwisem i optymalizację kosztów w jednej intuicyjnej platformie.', 'fleetlink' ) ) ); ?></p>
 </div>
 <div class="features-grid">
 
@@ -470,11 +568,17 @@ foreach ( $faqs as $i => $faq ) : ?>
 <!-- CTA -->
 <section class="cta-section" id="cta">
 <div class="container">
-<h2 class="cta-title fade-in"><?php esc_html_e( 'Gotowy na inteligentne', 'fleetlink' ); ?><br><span class="gradient-text"><?php esc_html_e( 'zarządzanie flotą?', 'fleetlink' ); ?></span></h2>
-<p class="cta-description fade-in fade-in-delay-1"><?php esc_html_e( 'Dołącz do ponad 2 500 firm, które już optymalizują koszty i poprawiają bezpieczeństwo floty z FleetLink.', 'fleetlink' ); ?></p>
+<h2 class="cta-title fade-in"><?php echo esc_html( get_theme_mod( 'cta_title_line1', __( 'Gotowy na inteligentne', 'fleetlink' ) ) ); ?><br><span class="gradient-text"><?php echo esc_html( get_theme_mod( 'cta_title_line2', __( 'zarządzanie flotą?', 'fleetlink' ) ) ); ?></span></h2>
+<p class="cta-description fade-in fade-in-delay-1"><?php echo esc_html( get_theme_mod( 'cta_description', __( 'Dołącz do ponad 2 500 firm, które już optymalizują koszty i poprawiają bezpieczeństwo floty z FleetLink.', 'fleetlink' ) ) ); ?></p>
 <div class="cta-actions fade-in fade-in-delay-2">
-<a href="<?php echo esc_url( home_url( '/rejestracja/' ) ); ?>" class="btn btn-primary btn-xl"><?php esc_html_e( 'Zacznij bezpłatny okres próbny', 'fleetlink' ); ?></a>
-<a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>" class="btn btn-outline-white btn-xl"><?php esc_html_e( 'Porozmawiaj z konsultantem', 'fleetlink' ); ?></a>
+<?php
+$cta_btn1_text = get_theme_mod( 'cta_btn1_text', __( 'Zacznij bezpłatny okres próbny', 'fleetlink' ) );
+$cta_btn1_url  = get_theme_mod( 'cta_btn1_url', home_url( '/rejestracja/' ) );
+$cta_btn2_text = get_theme_mod( 'cta_btn2_text', __( 'Porozmawiaj z konsultantem', 'fleetlink' ) );
+$cta_btn2_url  = get_theme_mod( 'cta_btn2_url', home_url( '/kontakt/' ) );
+?>
+<a href="<?php echo esc_url( $cta_btn1_url ); ?>" class="btn btn-primary btn-xl"><?php echo esc_html( $cta_btn1_text ); ?></a>
+<a href="<?php echo esc_url( $cta_btn2_url ); ?>" class="btn btn-outline-white btn-xl"><?php echo esc_html( $cta_btn2_text ); ?></a>
 </div>
 <p class="cta-note fade-in fade-in-delay-3">
 <span>&#10003; <?php esc_html_e( '14 dni za darmo', 'fleetlink' ); ?></span>&nbsp;&nbsp;

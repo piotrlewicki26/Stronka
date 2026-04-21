@@ -638,8 +638,464 @@ function fleetlink_customize_register( $wp_customize ) {
 			)
 		);
 	}
+
+	// ---- Photo Slider ----
+	$wp_customize->add_section(
+		'fleetlink_slider',
+		array(
+			'title'    => esc_html__( 'Photo Slider', 'fleetlink' ),
+			'priority' => 50,
+		)
+	);
+
+	// Global slider settings
+	$wp_customize->add_setting(
+		'slider_autoplay',
+		array(
+			'default'           => true,
+			'sanitize_callback' => 'fleetlink_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'slider_autoplay',
+		array(
+			'label'   => esc_html__( 'Auto-play slider', 'fleetlink' ),
+			'section' => 'fleetlink_slider',
+			'type'    => 'checkbox',
+		)
+	);
+
+	$wp_customize->add_setting(
+		'slider_interval',
+		array(
+			'default'           => 6000,
+			'sanitize_callback' => 'absint',
+		)
+	);
+	$wp_customize->add_control(
+		'slider_interval',
+		array(
+			'label'       => esc_html__( 'Auto-play interval (ms)', 'fleetlink' ),
+			'description' => esc_html__( 'Time in milliseconds between slides (e.g. 6000 = 6 s).', 'fleetlink' ),
+			'section'     => 'fleetlink_slider',
+			'type'        => 'number',
+			'input_attrs' => array( 'min' => 2000, 'max' => 20000, 'step' => 500 ),
+		)
+	);
+
+	// Per-slide settings (5 slides)
+	for ( $s = 1; $s <= 5; $s++ ) {
+		// Active toggle
+		$wp_customize->add_setting(
+			"slider_{$s}_active",
+			array(
+				'default'           => ( $s <= 3 ),
+				'sanitize_callback' => 'fleetlink_sanitize_checkbox',
+			)
+		);
+		$wp_customize->add_control(
+			"slider_{$s}_active",
+			array(
+				'label'   => sprintf( esc_html__( 'Enable Slide %d', 'fleetlink' ), $s ),
+				'section' => 'fleetlink_slider',
+				'type'    => 'checkbox',
+			)
+		);
+
+		// Background image
+		$wp_customize->add_setting(
+			"slider_{$s}_image",
+			array(
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
+			)
+		);
+		$wp_customize->add_control(
+			new WP_Customize_Image_Control(
+				$wp_customize,
+				"slider_{$s}_image",
+				array(
+					'label'   => sprintf( esc_html__( 'Slide %d – Background Photo', 'fleetlink' ), $s ),
+					'section' => 'fleetlink_slider',
+				)
+			)
+		);
+
+		// Eyebrow
+		$wp_customize->add_setting(
+			"slider_{$s}_eyebrow",
+			array(
+				'default'           => fleetlink_slider_default( $s, 'eyebrow' ),
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+		$wp_customize->add_control(
+			"slider_{$s}_eyebrow",
+			array(
+				'label'   => sprintf( esc_html__( 'Slide %d – Eyebrow / Category', 'fleetlink' ), $s ),
+				'section' => 'fleetlink_slider',
+				'type'    => 'text',
+			)
+		);
+
+		// Title
+		$wp_customize->add_setting(
+			"slider_{$s}_title",
+			array(
+				'default'           => fleetlink_slider_default( $s, 'title' ),
+				'sanitize_callback' => 'wp_kses_post',
+			)
+		);
+		$wp_customize->add_control(
+			"slider_{$s}_title",
+			array(
+				'label'       => sprintf( esc_html__( 'Slide %d – Title (HTML allowed for <span class="highlight">)', 'fleetlink' ), $s ),
+				'section'     => 'fleetlink_slider',
+				'type'        => 'text',
+			)
+		);
+
+		// Description
+		$wp_customize->add_setting(
+			"slider_{$s}_description",
+			array(
+				'default'           => fleetlink_slider_default( $s, 'description' ),
+				'sanitize_callback' => 'sanitize_textarea_field',
+			)
+		);
+		$wp_customize->add_control(
+			"slider_{$s}_description",
+			array(
+				'label'   => sprintf( esc_html__( 'Slide %d – Description', 'fleetlink' ), $s ),
+				'section' => 'fleetlink_slider',
+				'type'    => 'textarea',
+			)
+		);
+
+		// Button 1
+		$wp_customize->add_setting(
+			"slider_{$s}_btn_text",
+			array(
+				'default'           => fleetlink_slider_default( $s, 'btn_text' ),
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+		$wp_customize->add_control(
+			"slider_{$s}_btn_text",
+			array(
+				'label'   => sprintf( esc_html__( 'Slide %d – Button 1 Text', 'fleetlink' ), $s ),
+				'section' => 'fleetlink_slider',
+				'type'    => 'text',
+			)
+		);
+		$wp_customize->add_setting(
+			"slider_{$s}_btn_url",
+			array(
+				'default'           => fleetlink_slider_default( $s, 'btn_url' ),
+				'sanitize_callback' => 'esc_url_raw',
+			)
+		);
+		$wp_customize->add_control(
+			"slider_{$s}_btn_url",
+			array(
+				'label'   => sprintf( esc_html__( 'Slide %d – Button 1 URL', 'fleetlink' ), $s ),
+				'section' => 'fleetlink_slider',
+				'type'    => 'url',
+			)
+		);
+
+		// Button 2 (optional secondary)
+		$wp_customize->add_setting(
+			"slider_{$s}_btn2_text",
+			array(
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+		$wp_customize->add_control(
+			"slider_{$s}_btn2_text",
+			array(
+				'label'   => sprintf( esc_html__( 'Slide %d – Button 2 Text (optional)', 'fleetlink' ), $s ),
+				'section' => 'fleetlink_slider',
+				'type'    => 'text',
+			)
+		);
+		$wp_customize->add_setting(
+			"slider_{$s}_btn2_url",
+			array(
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
+			)
+		);
+		$wp_customize->add_control(
+			"slider_{$s}_btn2_url",
+			array(
+				'label'   => sprintf( esc_html__( 'Slide %d – Button 2 URL', 'fleetlink' ), $s ),
+				'section' => 'fleetlink_slider',
+				'type'    => 'url',
+			)
+		);
+	}
+
+	// ---- CTA Section ----
+	$wp_customize->add_section(
+		'fleetlink_cta',
+		array(
+			'title'    => esc_html__( 'CTA Section', 'fleetlink' ),
+			'priority' => 55,
+		)
+	);
+	$wp_customize->add_setting(
+		'cta_title_line1',
+		array(
+			'default'           => esc_html__( 'Gotowy na inteligentne', 'fleetlink' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'cta_title_line1',
+		array(
+			'label'   => esc_html__( 'CTA Headline – Line 1', 'fleetlink' ),
+			'section' => 'fleetlink_cta',
+			'type'    => 'text',
+		)
+	);
+	$wp_customize->add_setting(
+		'cta_title_line2',
+		array(
+			'default'           => esc_html__( 'zarządzanie flotą?', 'fleetlink' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'cta_title_line2',
+		array(
+			'label'   => esc_html__( 'CTA Headline – Line 2 (gradient)', 'fleetlink' ),
+			'section' => 'fleetlink_cta',
+			'type'    => 'text',
+		)
+	);
+	$wp_customize->add_setting(
+		'cta_description',
+		array(
+			'default'           => esc_html__( 'Dołącz do ponad 2 500 firm, które już optymalizują koszty i poprawiają bezpieczeństwo floty z FleetLink.', 'fleetlink' ),
+			'sanitize_callback' => 'sanitize_textarea_field',
+		)
+	);
+	$wp_customize->add_control(
+		'cta_description',
+		array(
+			'label'   => esc_html__( 'CTA Description', 'fleetlink' ),
+			'section' => 'fleetlink_cta',
+			'type'    => 'textarea',
+		)
+	);
+	$wp_customize->add_setting(
+		'cta_btn1_text',
+		array(
+			'default'           => esc_html__( 'Zacznij bezpłatny okres próbny', 'fleetlink' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'cta_btn1_text',
+		array(
+			'label'   => esc_html__( 'CTA Button 1 Text', 'fleetlink' ),
+			'section' => 'fleetlink_cta',
+			'type'    => 'text',
+		)
+	);
+	$wp_customize->add_setting(
+		'cta_btn1_url',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+	$wp_customize->add_control(
+		'cta_btn1_url',
+		array(
+			'label'   => esc_html__( 'CTA Button 1 URL', 'fleetlink' ),
+			'section' => 'fleetlink_cta',
+			'type'    => 'url',
+		)
+	);
+	$wp_customize->add_setting(
+		'cta_btn2_text',
+		array(
+			'default'           => esc_html__( 'Porozmawiaj z konsultantem', 'fleetlink' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'cta_btn2_text',
+		array(
+			'label'   => esc_html__( 'CTA Button 2 Text', 'fleetlink' ),
+			'section' => 'fleetlink_cta',
+			'type'    => 'text',
+		)
+	);
+	$wp_customize->add_setting(
+		'cta_btn2_url',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+	$wp_customize->add_control(
+		'cta_btn2_url',
+		array(
+			'label'   => esc_html__( 'CTA Button 2 URL', 'fleetlink' ),
+			'section' => 'fleetlink_cta',
+			'type'    => 'url',
+		)
+	);
+
+	// ---- Features Section ----
+	$wp_customize->add_section(
+		'fleetlink_features',
+		array(
+			'title'    => esc_html__( 'Features Section', 'fleetlink' ),
+			'priority' => 60,
+		)
+	);
+	$wp_customize->add_setting(
+		'features_eyebrow',
+		array(
+			'default'           => esc_html__( 'Możliwości platformy', 'fleetlink' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'features_eyebrow',
+		array(
+			'label'   => esc_html__( 'Features – Eyebrow Text', 'fleetlink' ),
+			'section' => 'fleetlink_features',
+			'type'    => 'text',
+		)
+	);
+	$wp_customize->add_setting(
+		'features_title',
+		array(
+			'default'           => esc_html__( 'Wszystko, czego potrzebuje nowoczesna flota', 'fleetlink' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'features_title',
+		array(
+			'label'   => esc_html__( 'Features – Section Title', 'fleetlink' ),
+			'section' => 'fleetlink_features',
+			'type'    => 'text',
+		)
+	);
+	$wp_customize->add_setting(
+		'features_description',
+		array(
+			'default'           => esc_html__( 'FleetLink łączy śledzenie GPS, analizę kierowców, zarządzanie serwisem i optymalizację kosztów w jednej intuicyjnej platformie.', 'fleetlink' ),
+			'sanitize_callback' => 'sanitize_textarea_field',
+		)
+	);
+	$wp_customize->add_control(
+		'features_description',
+		array(
+			'label'   => esc_html__( 'Features – Description', 'fleetlink' ),
+			'section' => 'fleetlink_features',
+			'type'    => 'textarea',
+		)
+	);
 }
 add_action( 'customize_register', 'fleetlink_customize_register' );
+
+/* =========================================================
+   CUSTOMIZER HELPER: checkbox sanitize
+   ========================================================= */
+
+if ( ! function_exists( 'fleetlink_sanitize_checkbox' ) ) {
+	function fleetlink_sanitize_checkbox( $checked ) {
+		return ( isset( $checked ) && true === $checked ) ? true : false;
+	}
+}
+
+/* =========================================================
+   SLIDER HELPER FUNCTIONS
+   ========================================================= */
+
+/**
+ * Return demo default values for each slider slide field.
+ *
+ * @param int    $slide 1-based slide index.
+ * @param string $field Field name.
+ * @return string
+ */
+function fleetlink_slider_default( $slide, $field ) {
+	$defaults = array(
+		1 => array(
+			'eyebrow'     => 'Monitoring GPS',
+			'title'       => 'Każdy pojazd na mapie – <span class="highlight">w czasie rzeczywistym</span>',
+			'description' => 'Śledź pozycję całej floty z dokładnością do 5 metrów. Historia tras, zdarzenia i powiadomienia natychmiastowe. Pełna kontrola 24/7.',
+			'btn_text'    => 'Wypróbuj za darmo',
+			'btn_url'     => '#pricing',
+		),
+		2 => array(
+			'eyebrow'     => 'Zachowanie Kierowcy',
+			'title'       => 'Eco-driving, który realnie <span class="highlight">obniża koszty paliwa</span>',
+			'description' => 'Analizuj styl jazdy, nagradzaj najlepszych kierowców i redukuj wydatki na paliwo o 15–20%. Moduł dostępny od planu Pro.',
+			'btn_text'    => 'Poznaj moduł',
+			'btn_url'     => '/driver-behavior/',
+		),
+		3 => array(
+			'eyebrow'     => 'Zarządzanie Serwisem',
+			'title'       => 'Zero nieplanowanych przestojów dzięki <span class="highlight">proaktywnemu serwisowi</span>',
+			'description' => 'Automatyczne przypomnienia, historia przeglądów i predykcyjne alerty zapobiegają awariom, które zatrzymują Twoją flotę.',
+			'btn_text'    => 'Dowiedz się więcej',
+			'btn_url'     => '/serwis/',
+		),
+		4 => array(
+			'eyebrow'     => 'Telematyka Wideo',
+			'title'       => 'Pełna dokumentacja zdarzeń drogowych <span class="highlight">z kamerami HD</span>',
+			'description' => 'Nagrania z kamer zintegrowane z systemem GPS. Dowód w sporach z ubezpieczycielami i przy roszczeniach odszkodowawczych.',
+			'btn_text'    => 'Poznaj kamery',
+			'btn_url'     => '/telematyka-wideo/',
+		),
+		5 => array(
+			'eyebrow'     => 'Centrum Raportów',
+			'title'       => 'Raporty, które przekładają się <span class="highlight">na realne decyzje</span>',
+			'description' => 'Automatyczne raporty tygodniowe i miesięczne z kluczowymi wskaźnikami KPI dla każdej floty. Eksport do PDF i Excel.',
+			'btn_text'    => 'Sprawdź raporty',
+			'btn_url'     => '/raporty/',
+		),
+	);
+
+	if ( isset( $defaults[ $slide ][ $field ] ) ) {
+		return $defaults[ $slide ][ $field ];
+	}
+	return '';
+}
+
+/**
+ * Return a decorative SVG icon for the given zero-based slide index.
+ *
+ * @param int $idx 0-based index.
+ * @return string  Safe SVG markup.
+ */
+function fleetlink_slider_deco_icon( $idx ) {
+	$icons = array(
+		// GPS pin
+		'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6"><circle cx="12" cy="10" r="3"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="12" r="9" stroke-dasharray="2 4" opacity=".4"/><circle cx="12" cy="12" r="5" stroke-dasharray="1 3" opacity=".3"/></svg>',
+		// Driver steering
+		'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" opacity=".4"/></svg>',
+		// Wrench / service
+		'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3-3a6 6 0 01-7.4 7.4l-6.3 6.3a2.1 2.1 0 01-3-3L10.3 9a6 6 0 017.4-7.4l-3 3z"/><path d="M6 18l2-2" opacity=".4"/></svg>',
+		// Video camera
+		'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6"><rect x="2" y="6" width="15" height="12" rx="2"/><polygon points="22,7 17,10 17,14 22,17"/><circle cx="9.5" cy="12" r="3" opacity=".4"/></svg>',
+		// Chart / reports
+		'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6"><path d="M9 17v-6M12 17v-3M15 17v-9M6 17v-2"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v6" opacity=".4"/></svg>',
+	);
+
+	$safe_idx = $idx % count( $icons );
+	return $icons[ $safe_idx ];
+}
 
 /* =========================================================
    EXCERPT
