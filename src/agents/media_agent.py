@@ -6,9 +6,8 @@ WordPress Media Library.
 """
 from __future__ import annotations
 
-import io
 import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal, get_args
 
 import requests
 from openai import OpenAI
@@ -18,6 +17,10 @@ from src.config import config
 if TYPE_CHECKING:
     from src.wordpress_client import WordPressClient
 
+# Valid DALL-E 3 size values accepted by the OpenAI API
+_VALID_SIZES = {"1024x1024", "1792x1024", "1024x1792"}
+ImageSize = Literal["1024x1024", "1792x1024", "1024x1792"]
+
 
 class MediaAgent:
     """Generates images with DALL-E and manages the WordPress Media Library."""
@@ -26,7 +29,13 @@ class MediaAgent:
         self._wp = wp
         self._client = OpenAI(api_key=config.OPENAI_API_KEY)
         self._image_model = config.IMAGE_MODEL
-        self._image_size = config.IMAGE_SIZE
+        raw_size = config.IMAGE_SIZE
+        if raw_size not in _VALID_SIZES:
+            raise ValueError(
+                f"IMAGE_SIZE '{raw_size}' is not valid for DALL-E. "
+                f"Accepted values: {sorted(_VALID_SIZES)}"
+            )
+        self._image_size: ImageSize = raw_size  # type: ignore[assignment]
 
     # ------------------------------------------------------------------
     # Public API
@@ -87,7 +96,7 @@ class MediaAgent:
             model=self._image_model,
             prompt=prompt,
             n=1,
-            size=self._image_size,  # type: ignore[arg-type]
+            size=self._image_size,
             response_format="url",
         )
         image_url = response.data[0].url

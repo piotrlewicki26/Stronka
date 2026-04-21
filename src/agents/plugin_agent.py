@@ -8,9 +8,6 @@ from __future__ import annotations
 
 import subprocess
 from dataclasses import dataclass, field
-from typing import List
-
-
 @dataclass
 class PluginSpec:
     slug: str
@@ -19,7 +16,7 @@ class PluginSpec:
 
 
 # Recommended default plugins for most sites
-DEFAULT_PLUGINS: List[PluginSpec] = [
+DEFAULT_PLUGINS: list[PluginSpec] = [
     PluginSpec("wordpress-seo", "Yoast SEO – on-page SEO management"),
     PluginSpec("contact-form-7", "Contact Form 7 – flexible contact forms"),
     PluginSpec("w3-total-cache", "W3 Total Cache – performance caching"),
